@@ -8,22 +8,22 @@ import android.os.Parcelable;
  */
 
 public final class NoteInfo implements Parcelable {
-    private int mId;
     private CourseInfo mCourse;
     private String mTitle;
     private String mText;
+    private int mId;
 
-    public NoteInfo(CourseInfo course, String title, String text) {
+    public NoteInfo(int id, CourseInfo course, String title, String text) {
+        mId = id;
         mCourse = course;
         mTitle = title;
         mText = text;
     }
 
-    public NoteInfo(int id, CourseInfo course, String title, String text) {
+    public NoteInfo(CourseInfo course, String title, String text) {
         mCourse = course;
         mTitle = title;
         mText = text;
-        mId = id;
     }
 
     private NoteInfo(Parcel source) {
@@ -34,10 +34,6 @@ public final class NoteInfo implements Parcelable {
 
     public int getId() {
         return mId;
-    }
-
-    public void setId(int id) {
-        mId = id;
     }
 
     public CourseInfo getCourse() {
@@ -100,8 +96,8 @@ public final class NoteInfo implements Parcelable {
         dest.writeString(mText);
     }
 
-    public final static Parcelable.Creator<NoteInfo> CREATOR =
-            new Parcelable.Creator<NoteInfo>() {
+    public final static Creator<NoteInfo> CREATOR =
+            new Creator<NoteInfo>() {
 
                 @Override
                 public NoteInfo createFromParcel(Parcel source) {

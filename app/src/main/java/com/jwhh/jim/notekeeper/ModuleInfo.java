@@ -76,8 +76,8 @@ public final class ModuleInfo implements Parcelable {
         dest.writeByte((byte)(mIsComplete ? 1 : 0));
     }
 
-    public static final Parcelable.Creator<ModuleInfo> CREATOR =
-            new Parcelable.Creator<ModuleInfo>() {
+    public static final Creator<ModuleInfo> CREATOR =
+            new Creator<ModuleInfo>() {
 
                 @Override
                 public ModuleInfo createFromParcel(Parcel source) {

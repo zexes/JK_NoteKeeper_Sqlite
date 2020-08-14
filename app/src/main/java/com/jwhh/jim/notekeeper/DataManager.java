@@ -1,8 +1,10 @@
 package com.jwhh.jim.notekeeper;
 
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.jwhh.jim.notekeeper.NoteKeeperDatabaseContract.CourseInfoEntry;
+import com.jwhh.jim.notekeeper.NoteKeeperDatabaseContract.NoteInfoEntry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +33,12 @@ public class DataManager {
         String[] courseColumns = {
                 CourseInfoEntry.COLUMN_COURSE_ID,
                 CourseInfoEntry.COLUMN_COURSE_TITLE};
-        db.query(CourseInfoEntry.TABLE_NAME, courseColumns, null, null, null, null, null);
+        Cursor courseCursor = db.query(CourseInfoEntry.TABLE_NAME, courseColumns, null, null, null, null, null);
+
+        String[] noteColumns = {NoteInfoEntry.COLUMN_NOTE_TITLE,
+                NoteInfoEntry.COLUMN_NOTE_TEXT, NoteInfoEntry.COLUMN_COURSE_ID};
+        Cursor noteCursor = db.query(NoteInfoEntry.TABLE_NAME, noteColumns,
+                null, null, null, null, null);
     }
 
     public String getCurrentUserName() {

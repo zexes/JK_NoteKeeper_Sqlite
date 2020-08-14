@@ -35,10 +35,33 @@ public class DataManager {
                 CourseInfoEntry.COLUMN_COURSE_TITLE};
         final Cursor courseCursor = db.query(CourseInfoEntry.TABLE_NAME, courseColumns, null, null, null, null, null);
         loadCoursesFromDatabase(courseCursor);
-        final String[] noteColumns = {NoteInfoEntry.COLUMN_NOTE_TITLE,
-                NoteInfoEntry.COLUMN_NOTE_TEXT, NoteInfoEntry.COLUMN_COURSE_ID};
+        final String[] noteColumns = {
+                NoteInfoEntry.COLUMN_NOTE_TITLE,
+                NoteInfoEntry.COLUMN_NOTE_TEXT,
+                NoteInfoEntry.COLUMN_COURSE_ID};
         final Cursor noteCursor = db.query(NoteInfoEntry.TABLE_NAME, noteColumns,
                 null, null, null, null, null);
+
+        loadNoteFromDatabase(noteCursor);
+    }
+
+    private static void loadNoteFromDatabase(Cursor cursor) {
+        final int noteTitlePos = cursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TITLE);
+        final int noteTextPos = cursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TEXT);
+        final int courseIdPos = cursor.getColumnIndex(NoteInfoEntry.COLUMN_COURSE_ID);
+
+        DataManager dm = getInstance();
+        dm.mNotes.clear();
+        while(cursor.moveToNext()){
+            final String noteTitle = cursor.getString(noteTitlePos);
+            final String noteText = cursor.getString(noteTextPos);
+            final String courseId = cursor.getString(courseIdPos);
+
+            CourseInfo noteCourse = dm.getCourse(courseId);
+            NoteInfo note = new NoteInfo(noteCourse, noteTitle, noteText);
+            dm.mNotes.add(note);
+        }
+        cursor.close();
     }
 
     private static void loadCoursesFromDatabase(Cursor cursor) {
@@ -48,8 +71,8 @@ public class DataManager {
         DataManager dm = getInstance();
         dm.mCourses.clear();
         while(cursor.moveToNext()){
-            String courseId = cursor.getString(courseIdPos);
-            String courseTitle = cursor.getString(courseTitlePos);
+            final String courseId = cursor.getString(courseIdPos);
+            final String courseTitle = cursor.getString(courseTitlePos);
             CourseInfo course = new CourseInfo(courseId, courseTitle, null);
 
             dm.mCourses.add(course);

@@ -1,6 +1,7 @@
 package com.jwhh.jim.notekeeper;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -34,6 +35,10 @@ public class NoteActivity extends AppCompatActivity {
     private String mOriginalNoteTitle;
     private String mOriginalNoteText;
     private NoteKeeperOpenHelper mDbOpenHelper;
+    private Cursor mNoteCursor;
+    private int mCourseIdPos;
+    private int mNoteTitlePos;
+    private int mNoteTextPos;
 
     @Override
     protected void onDestroy() {
@@ -76,12 +81,28 @@ public class NoteActivity extends AppCompatActivity {
     private void loadNoteData() {
         SQLiteDatabase db = mDbOpenHelper.getReadableDatabase();
 
-        String courseId ="android_intents";
-        String titleStart = "dynamic";
+        final String courseId ="android_intents";
+        final String titleStart = "dynamic";
 
-        String selection = NoteInfoEntry.COLUMN_COURSE_ID + " = ? AND "
+        final String selection = NoteInfoEntry.COLUMN_COURSE_ID + " = ? AND "
                 + NoteInfoEntry.COLUMN_NOTE_TITLE + " LIKE ?";
-        String[] selectionArgs = {courseId, titleStart + "%"};
+        final String[] selectionArgs = {courseId, titleStart + "%"};
+
+        final String[] noteColumns = {
+                NoteInfoEntry.COLUMN_NOTE_TITLE,
+                NoteInfoEntry.COLUMN_NOTE_TEXT,
+                NoteInfoEntry.COLUMN_COURSE_ID
+        };
+
+        mNoteCursor = db.query(NoteInfoEntry.TABLE_NAME, noteColumns,
+                selection, selectionArgs, null, null, null);
+
+        mCourseIdPos = mNoteCursor.getColumnIndex(NoteInfoEntry.COLUMN_COURSE_ID);
+        mNoteTitlePos = mNoteCursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TITLE);
+        mNoteTextPos = mNoteCursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TEXT);
+
+        mNoteCursor.moveToNext();
+        displayNote();
 
     }
 
@@ -137,11 +158,15 @@ public class NoteActivity extends AppCompatActivity {
     }
 
     private void displayNote() {
+        final String courseId = mNoteCursor.getString(mCourseIdPos);
+        final String noteTitle = mNoteCursor.getString(mNoteTitlePos);
+        final String noteText = mNoteCursor.getString(mNoteTextPos);
         List<CourseInfo> courses = DataManager.getInstance().getCourses();
-        int courseIndex = courses.indexOf(mNote.getCourse());
+        CourseInfo course = DataManager.getInstance().getCourse(courseId);
+        int courseIndex = courses.indexOf(course);
         mSpinnerCourses.setSelection(courseIndex);
-        mTextNoteTitle.setText(mNote.getTitle());
-        mTextNoteText.setText(mNote.getText());
+        mTextNoteTitle.setText(noteTitle);
+        mTextNoteText.setText(noteText);
     }
 
     private void readDisplayStateValues() {

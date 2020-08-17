@@ -1,5 +1,6 @@
 package com.jwhh.jim.notekeeper;
 
+import android.annotation.SuppressLint;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -293,6 +294,7 @@ public class NoteActivity extends AppCompatActivity
         return loader;
     }
 
+    @SuppressLint("StaticFieldLeak")
     private CursorLoader createLoaderCourses() {
         mCoursesQueryFinished = false;
         return new CursorLoader(this) {
@@ -311,6 +313,7 @@ public class NoteActivity extends AppCompatActivity
         };
     }
 
+    @SuppressLint("StaticFieldLeak")
     private CursorLoader createLoaderNotes() {
         mNotesQueryFinished = false;
         return new CursorLoader(this) {

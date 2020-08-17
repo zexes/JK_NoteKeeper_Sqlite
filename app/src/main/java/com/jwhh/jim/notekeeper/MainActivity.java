@@ -1,5 +1,6 @@
 package com.jwhh.jim.notekeeper;
 
+import android.annotation.SuppressLint;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -83,6 +84,7 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
 
+        //to Repeat the query in order to get latest update
         getLoaderManager().restartLoader(LOADER_NOTES, null, this);
 
         updateNavHeader();
@@ -217,6 +219,7 @@ public class MainActivity extends AppCompatActivity
         Snackbar.make(view, message_id, Snackbar.LENGTH_LONG).show();
     }
 
+    @SuppressLint("StaticFieldLeak")
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         CursorLoader loader = null;

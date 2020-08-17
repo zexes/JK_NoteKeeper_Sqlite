@@ -25,6 +25,7 @@ import java.util.List;
 
 public class NoteActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     public static final int LOADER_NOTES = 0;
+    public static final int LOADER_COURSES = 1;
     private final String TAG = getClass().getSimpleName();
     public static final String NOTE_ID = "com.jwhh.jim.notekeeper.NOTE_ID";
     public static final String ORIGINAL_NOTE_COURSE_ID = "com.jwhh.jim.notekeeper.ORIGINAL_NOTE_COURSE_ID";
@@ -72,7 +73,7 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         mAdapterCourses.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); //associated layout
         mSpinnerCourses.setAdapter(mAdapterCourses);//associate adapter with the spinner
 
-        loadCourseData();
+        getLoaderManager().initLoader(LOADER_COURSES, null, this);//this here refers to the Loader manager notifying the NoteActivity class of the events
 
         readDisplayStateValues();
         if(savedInstanceState == null) {
@@ -289,7 +290,26 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         CursorLoader loader = null;
         if(id == LOADER_NOTES)
             loader = createLoaderNotes();
+        else if(id == LOADER_COURSES)
+            loader = createLoaderCourses();
         return loader;
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private CursorLoader createLoaderCourses() {
+        return new CursorLoader(this){
+            @Override
+            public Cursor loadInBackground() {
+                SQLiteDatabase db = mDbOpenHelper.getReadableDatabase();
+
+                String[] courseColumns = {
+                        CourseInfoEntry.COLUMN_COURSE_TITLE,
+                        CourseInfoEntry.COLUMN_COURSE_ID,
+                };
+                return db.query(CourseInfoEntry.TABLE_NAME, courseColumns,
+                        null, null, null, null, CourseInfoEntry.COLUMN_COURSE_TITLE);
+            }
+        };
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -318,6 +338,8 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {//Called when data is ready
         if(loader.getId() == LOADER_NOTES)
             loadFinishedNotes(data);
+        else if(loader.getId() == LOADER_COURSES)
+            mAdapterCourses.changeCursor(data);
 
     }
 
@@ -334,6 +356,8 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onLoaderReset(Loader<Cursor> loader) {//called when its time to cleanup
         if(loader.getId() == LOADER_NOTES)
             if(mNoteCursor != null) mNoteCursor.close();
+        else if(loader.getId() == LOADER_COURSES)
+            mAdapterCourses.changeCursor(null);
     }
 }
 

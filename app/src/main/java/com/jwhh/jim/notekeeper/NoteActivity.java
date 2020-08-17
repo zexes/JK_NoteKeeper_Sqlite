@@ -11,8 +11,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 
+import com.jwhh.jim.notekeeper.NoteKeeperDatabaseContract.CourseInfoEntry;
 import com.jwhh.jim.notekeeper.NoteKeeperDatabaseContract.NoteInfoEntry;
 
 import java.util.List;
@@ -39,6 +41,7 @@ public class NoteActivity extends AppCompatActivity {
     private int mCourseIdPos;
     private int mNoteTitlePos;
     private int mNoteTextPos;
+    private SimpleCursorAdapter mAdapterCourses;
 
     @Override
     protected void onDestroy() {
@@ -57,11 +60,12 @@ public class NoteActivity extends AppCompatActivity {
 
         mSpinnerCourses = (Spinner) findViewById(R.id.spinner_courses);
 
-        List<CourseInfo> courses = DataManager.getInstance().getCourses();
-        ArrayAdapter<CourseInfo> adapterCourses =
-                new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, courses);
-        adapterCourses.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpinnerCourses.setAdapter(adapterCourses);
+        //where android.R.id.text1 is the id of the spinner
+        mAdapterCourses = new SimpleCursorAdapter(this, android.R.layout.simple_spinner_item, null,
+                new String[]{CourseInfoEntry.COLUMN_COURSE_TITLE},
+                new int[] {android.R.id.text1}, 0);
+        mAdapterCourses.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); //associated layout
+        mSpinnerCourses.setAdapter(mAdapterCourses);//associate adapter with the spinner
 
         readDisplayStateValues();
         if(savedInstanceState == null) {

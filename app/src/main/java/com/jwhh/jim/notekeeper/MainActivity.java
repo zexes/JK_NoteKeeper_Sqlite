@@ -233,11 +233,10 @@ public class MainActivity extends AppCompatActivity
                             //setting fully qualified name for does that might cause ambiguity
                             NoteInfoEntry.getQName(NoteInfoEntry._ID),
                             NoteInfoEntry.COLUMN_NOTE_TITLE,
-                            NoteInfoEntry.getQName(NoteInfoEntry.COLUMN_COURSE_ID),
                             CourseInfoEntry.COLUMN_COURSE_TITLE
                     };
 
-                    final String noteOrderBy = NoteInfoEntry.COLUMN_COURSE_ID +
+                    final String noteOrderBy = CourseInfoEntry.COLUMN_COURSE_TITLE +
                             "," + NoteInfoEntry.COLUMN_NOTE_TITLE;
 
                     // note_info JOIN course_info ON note_info.course.id = course_info.course_id

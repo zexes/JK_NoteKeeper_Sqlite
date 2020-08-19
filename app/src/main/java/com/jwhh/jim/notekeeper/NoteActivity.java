@@ -2,6 +2,7 @@ package com.jwhh.jim.notekeeper;
 
 import android.annotation.SuppressLint;
 import android.app.LoaderManager;
+import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -175,6 +176,20 @@ public class NoteActivity extends AppCompatActivity
 //        mNote.setCourse((CourseInfo) mSpinnerCourses.getSelectedItem());
 //        mNote.setTitle(mTextNoteTitle.getText().toString());
 //        mNote.setText(mTextNoteText.getText().toString());
+    }
+
+    private void saveNoteToDatabase(String courseId, String noteTitle, String noteText){
+        final String selection = NoteInfoEntry._ID + " = ";
+        String[] selectionArgs = {Integer.toString(mNoteId)}; //these identifies which note to update
+
+        ContentValues values = new ContentValues(); //columns and values
+        values.put(NoteInfoEntry.COLUMN_COURSE_ID, courseId);
+        values.put(NoteInfoEntry.COLUMN_NOTE_TITLE, noteTitle);
+        values.put(NoteInfoEntry.COLUMN_NOTE_TEXT, noteText);
+
+        SQLiteDatabase db = mDbOpenHelper.getWritableDatabase();
+        db.update(NoteInfoEntry.TABLE_NAME, values, selection, selectionArgs);// these perform the update. returns affected rows
+
     }
 
     private void displayNote() {

@@ -148,7 +148,7 @@ public class NoteActivity extends AppCompatActivity
         if(mIsCancelling) {
             Log.i(TAG, "Cancelling note at position: " + mNoteId);
             if(mIsNewNote) {
-                DataManager.getInstance().removeNote(mNoteId);
+                deleteNoteFromDatabase();
             } else {
                 storePreviousNoteValues();
             }
@@ -156,6 +156,13 @@ public class NoteActivity extends AppCompatActivity
             saveNote();
         }
         Log.d(TAG, "onPause");
+    }
+
+    private void deleteNoteFromDatabase() {
+        String selection = NoteInfoEntry._ID + " = ?";
+        String[] selectionArgs = {Integer.toString(mNoteId)};
+        SQLiteDatabase db = mDbOpenHelper.getWritableDatabase();
+        db.delete(NoteInfoEntry.TABLE_NAME, selection, selectionArgs);
     }
 
     private void storePreviousNoteValues() {

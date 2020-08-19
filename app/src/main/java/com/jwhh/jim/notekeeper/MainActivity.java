@@ -85,7 +85,6 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
 
-        //to Repeat the query in order to get latest update
         getLoaderManager().restartLoader(LOADER_NOTES, null, this);
 
         updateNavHeader();
@@ -239,11 +238,11 @@ public class MainActivity extends AppCompatActivity
                     final String noteOrderBy = CourseInfoEntry.COLUMN_COURSE_TITLE +
                             "," + NoteInfoEntry.COLUMN_NOTE_TITLE;
 
-                    // note_info JOIN course_info ON note_info.course.id = course_info.course_id
+                    // note_info JOIN course_info ON note_info.course_id = course_info.course_id
                     String tablesWithJoin = NoteInfoEntry.TABLE_NAME + " JOIN " +
-                            CourseInfoEntry.TABLE_NAME  + " ON " +
+                            CourseInfoEntry.TABLE_NAME + " ON " +
                             NoteInfoEntry.getQName(NoteInfoEntry.COLUMN_COURSE_ID) + " = " +
-                            CourseInfoEntry.getQName(CourseInfoEntry.COLUMN_COURSE_ID);
+                            CourseInfoEntry.getQName( CourseInfoEntry.COLUMN_COURSE_ID);
 
                     return db.query(tablesWithJoin, noteColumns,
                             null, null, null, null, noteOrderBy);

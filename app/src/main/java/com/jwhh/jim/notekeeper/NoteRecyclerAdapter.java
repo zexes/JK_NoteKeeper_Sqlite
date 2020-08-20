@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.jwhh.jim.notekeeper.NoteKeeperDatabaseContract.CourseInfoEntry;
 import com.jwhh.jim.notekeeper.NoteKeeperDatabaseContract.NoteInfoEntry;
 
+import java.util.List;
+
 /**
  * Created by Jim.
  */
@@ -33,16 +35,17 @@ public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapte
     }
 
     private void populateColumnPositions() {
-        if(mCursor == null) return;
-
-        //Get Column Indexes from mCursor
+        if(mCursor == null)
+            return;
+        // Get column indexes from mCursor
         mCoursePos = mCursor.getColumnIndex(CourseInfoEntry.COLUMN_COURSE_TITLE);
         mNoteTitlePos = mCursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TITLE);
         mIdPos = mCursor.getColumnIndex(NoteInfoEntry._ID);
     }
 
-    public void changeCursor(Cursor cursor){
-        if(mCursor != null) mCursor.close();
+    public void changeCursor(Cursor cursor) {
+        if(mCursor != null)
+            mCursor.close();
         mCursor = cursor;
         populateColumnPositions();
         notifyDataSetChanged();
@@ -55,11 +58,11 @@ public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapte
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {//purpose of the this method is to display data at a specific position in the RecyclerView
+    public void onBindViewHolder(ViewHolder holder, int position) {
         mCursor.moveToPosition(position);
-        final String course = mCursor.getString(mCoursePos);
-        final String noteTitle = mCursor.getString(mNoteTitlePos);
-        final int id = mCursor.getInt(mIdPos);
+        String course = mCursor.getString(mCoursePos);
+        String noteTitle = mCursor.getString(mNoteTitlePos);
+        int id = mCursor.getInt(mIdPos);
 
         holder.mTextCourse.setText(course);
         holder.mTextTitle.setText(noteTitle);
@@ -67,7 +70,7 @@ public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapte
     }
     @Override
     public int getItemCount() {
-        return  mCursor == null ? 0 : mCursor.getCount();
+        return mCursor == null ? 0 : mCursor.getCount();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

@@ -1,5 +1,6 @@
 package com.jwhh.jim.notekeeper;
 
+import android.annotation.SuppressLint;
 import android.app.LoaderManager;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -166,6 +167,7 @@ public class NoteActivity extends AppCompatActivity
         Log.d(TAG, "************** onPause **************");
     }
 
+    @SuppressLint("StaticFieldLeak")
     private void deleteNoteFromDatabase() {
         AsyncTask task = new AsyncTask() {
             @Override
@@ -259,7 +261,9 @@ public class NoteActivity extends AppCompatActivity
 
     }
 
+    @SuppressLint("StaticFieldLeak")
     private void createNewNote() {
+        //Start Here
         AsyncTask<ContentValues, Integer, Uri> task = new AsyncTask<ContentValues, Integer, Uri>() {
             private ProgressBar mProgressBar;
 

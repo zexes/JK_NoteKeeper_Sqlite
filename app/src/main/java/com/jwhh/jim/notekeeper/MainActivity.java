@@ -88,8 +88,6 @@ public class MainActivity extends AppCompatActivity
                     .detectAll()
                     .penaltyLog()
                     .build();
-                    //.penaltyLog().penaltyDialog().penaltyDeathOnNetwork().penaltyDeath()
-                    //.detectDiskReads().detectDiskWrites().detectNetwork()...
             StrictMode.setThreadPolicy(policy);
 
         }
@@ -116,7 +114,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void run() {
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-                drawer.openDrawer(Gravity.START);
+                drawer.openDrawer(GravityCompat.START);
             }
         }, 1000);
 
@@ -213,9 +211,15 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
+        } else if (id == R.id.action_backup_notes) {
+            backupNotes();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void backupNotes() {
+        NoteBackup.doBackup(MainActivity.this, NoteBackup.ALL_COURSES);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
